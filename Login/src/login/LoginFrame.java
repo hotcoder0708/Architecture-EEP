@@ -5,16 +5,18 @@
  */
 package login;
 
-import java.awt.event.WindowEvent;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
+import login.secureclient.SecureClient;
 
 /**
  *
  * @author hujiaxing
  */
 public class LoginFrame extends javax.swing.JFrame {
+    
+    SecureClient sc = null; // Client to connect RMI middle-ware
     
     int option = 0;
     /**
@@ -91,6 +93,7 @@ public class LoginFrame extends javax.swing.JFrame {
         });
 
         buttonGroup2.add(InventoryButton);
+        InventoryButton.setSelected(true);
         InventoryButton.setText("Inventory");
         InventoryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -178,11 +181,7 @@ public class LoginFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_usernameTextFieldActionPerformed
 
     private boolean authenciate(String username, String password) {
-        if (password.contains("admin") && username.contains("admin")) {
-            return true;
-        } else {
-            return false;
-        }
+        return SecureClient.getInstance().authenticate(username, password);
     }
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
         // TODO add your handling code here:
@@ -192,6 +191,7 @@ public class LoginFrame extends javax.swing.JFrame {
         if (authenciate(username, password)) {
             passwordTextField.setText("");
             usernameTextField.setText("");
+            checkRadio();
             close();
             switch (option) {
                 case 1:
@@ -241,6 +241,15 @@ public class LoginFrame extends javax.swing.JFrame {
         option = 2;
     }//GEN-LAST:event_OrderButtonActionPerformed
 
+    private void checkRadio() {
+        if(InventoryButton.isSelected()) {
+            option = 3;
+        } else if(OrderButton.isSelected()) {
+            option = 2;
+        } else if(ShippingButton.isSelected()) {
+            option = 1;
+        }
+    }
     /**
      * @param args the command line arguments
      */

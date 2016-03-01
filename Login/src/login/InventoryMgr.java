@@ -7,22 +7,12 @@ package login;
 
 import java.sql.ResultSet;
 import login.secureclient.SecureClient;
+import middleware.Utility;
 /**
  *
  * @author SINHA
  */
 public class InventoryMgr extends javax.swing.JFrame {
-
-    public static String[] INVENTORY_TABLES = {
-        "trees", "shrubs", "seeds", "cultureboxes", "genomics", "processing", "referencematerials"
-    };
-    public static String[] INVENTORY_TABLE_NAMES = {
-        "TREE", "SHRUB", "SEED", "CULTURE BOXES", "GENOMICS", "PROCESSING", "REFERENCE MATERIALS"
-    };
-    
-    boolean fromEEP(String table_name) {
-        return (table_name.equals("trees") || table_name.equals("shrubs") || table_name.equals("seeds"));
-    }
     
     int getCategoryIndex() {
         if(jRadioButton1.isSelected()) {
@@ -358,8 +348,8 @@ public class InventoryMgr extends javax.swing.JFrame {
 
         int cateIndex = getCategoryIndex();
         Boolean fieldError = cateIndex == -1;      // Error flag
-        String tableSelected = INVENTORY_TABLE_NAMES[cateIndex];    // String used to determine which data table to use
-        String table_name = INVENTORY_TABLES[cateIndex];
+        String tableSelected = Utility.INVENTORY_TABLE_NAMES[cateIndex];    // String used to determine which data table to use
+        String table_name = Utility.INVENTORY_TABLES[cateIndex];
         
             //Make sure there is a product description
             if ( jTextField5.getText().length() == 0 )
@@ -408,7 +398,7 @@ public class InventoryMgr extends javax.swing.JFrame {
 
                 
                 String sql;
-                if(fromEEP(table_name)) {
+                if(Utility.fromEEP(table_name)) {
                     sql = "INSERT INTO "+table_name+" (product_code, " +
                         "description, quantity, price) VALUES ( '" +
                         productID + "', " + "'" + description + "', " +
@@ -444,8 +434,8 @@ public class InventoryMgr extends javax.swing.JFrame {
         int cateIndex = getCategoryIndex();
         Boolean fieldError = cateIndex == -1;      // Error flag
         String msgString;        // String for displaying non-error messages
-        String tableSelected = INVENTORY_TABLE_NAMES[cateIndex];    // String used to determine which data table to use
-        String table_name = INVENTORY_TABLES[cateIndex];
+        String tableSelected = Utility.INVENTORY_TABLE_NAMES[cateIndex];    // String used to determine which data table to use
+        String table_name = Utility.INVENTORY_TABLES[cateIndex];
         
         //Now, we try to connect to the inventory database.
         if (!fieldError)
@@ -533,8 +523,8 @@ public class InventoryMgr extends javax.swing.JFrame {
                 //If there is no connection error, then we form the SQL statement
                 //to delete the inventory item and then execute it.
                 int cateIndex = getCategoryIndex();
-                String table_name = INVENTORY_TABLES[cateIndex];
-                String fieldName = fromEEP(table_name)? "product_code" : "productid";
+                String table_name = Utility.INVENTORY_TABLES[cateIndex];
+                String fieldName = Utility.fromEEP(table_name)? "product_code" : "productid";
                 String sql = "DELETE FROM " + table_name + " WHERE "+fieldName+" = '" + productID + "';";
 
                     try
@@ -614,11 +604,11 @@ public class InventoryMgr extends javax.swing.JFrame {
                 //to decrement the inventory item count and then execute it.
 
                 int cateIndex = getCategoryIndex();
-                String table_name = INVENTORY_TABLES[cateIndex];
-                String tableSelected = INVENTORY_TABLE_NAMES[cateIndex];
-                String fieldName = fromEEP(table_name)? "product_code" : "productid";
+                String table_name = Utility.INVENTORY_TABLES[cateIndex];
+                String tableSelected = Utility.INVENTORY_TABLE_NAMES[cateIndex];
+                String fieldName = Utility.fromEEP(table_name)? "product_code" : "productid";
                 String sql1;
-                if(fromEEP(table_name)) {
+                if(Utility.fromEEP(table_name)) {
                    sql1 = "UPDATE " + table_name + " set quantity=(quantity-1)";
                 } else {
                    sql1 = "UPDATE " + table_name + " set productquantity=(productquantity-1)";

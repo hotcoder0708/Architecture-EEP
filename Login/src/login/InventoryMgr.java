@@ -5,8 +5,6 @@
  */
 package login;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import login.secureclient.SecureClient;
 /**
@@ -536,7 +534,8 @@ public class InventoryMgr extends javax.swing.JFrame {
                 //to delete the inventory item and then execute it.
                 int cateIndex = getCategoryIndex();
                 String table_name = INVENTORY_TABLES[cateIndex];
-                String sql = "DELETE FROM " + table_name + " WHERE product_code = '" + productID + "';";
+                String fieldName = fromEEP(table_name)? "product_code" : "productid";
+                String sql = "DELETE FROM " + table_name + " WHERE "+fieldName+" = '" + productID + "';";
 
                     try
                     {
@@ -609,7 +608,7 @@ public class InventoryMgr extends javax.swing.JFrame {
             if ( !IndexNotFound )
             {
                 jTextArea1.setText("");
-                jTextArea1.append( "Deleting ProductID: " + productID );
+                jTextArea1.append( "Decreasing ProductID: " + productID );
 
                 //If there is no connection error, then we form the SQL statement
                 //to decrement the inventory item count and then execute it.
@@ -617,8 +616,16 @@ public class InventoryMgr extends javax.swing.JFrame {
                 int cateIndex = getCategoryIndex();
                 String table_name = INVENTORY_TABLES[cateIndex];
                 String tableSelected = INVENTORY_TABLE_NAMES[cateIndex];
-                String sql1 = "UPDATE " + table_name + " set quantity=(quantity-1) where product_code = '" + productID + "';";
-                String sql2 = "SELECT * from " + table_name + " where product_code = '" + productID + "';";
+                String fieldName = fromEEP(table_name)? "product_code" : "productid";
+                String sql1;
+                if(fromEEP(table_name)) {
+                   sql1 = "UPDATE " + table_name + " set quantity=(quantity-1)";
+                } else {
+                   sql1 = "UPDATE " + table_name + " set productquantity=(productquantity-1)";
+                }
+                sql1 += " where "+fieldName+" = '" + productID + "';";
+                
+                String sql2 = "SELECT * from " + table_name + " where "+fieldName+" = '" + productID + "';";
                     try
                     {
                         SecureClient.getInstance().executeSQL(sql1);

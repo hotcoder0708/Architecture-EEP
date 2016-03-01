@@ -88,12 +88,13 @@ public class SecureOperator implements SecureOperate {
                 ps.setString(1, username);
                 ps.setInt(2, activity_type);
                 ps.setInt(3, success);
-                return ps.execute();
+                ps.execute();
             } catch(Exception e) {
                 System.err.println("SecureOperator::recordActivity exception:" + e);
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -104,15 +105,14 @@ public class SecureOperator implements SecureOperate {
         } else { // inventory database
             dbConn = dbConn1;
         }
-        
-        boolean flag = false;
-        
+                
         if(dbConn != null) {
             try {
                 PreparedStatement ps = dbConn.prepareStatement(sql);
-                flag = ps.execute();
+                ps.execute();
             } catch(Exception e) {
                 System.err.println("SecureOperator::executeSQL exception:" + e);
+                return false;
             }
         }
         
@@ -122,14 +122,15 @@ public class SecureOperator implements SecureOperate {
             if(dbConn3 != null) {
                 try {
                     PreparedStatement ps = dbConn3.prepareStatement(sql);
-                    flag = ps.execute();
+                    ps.execute();
                 } catch(Exception e) {
                     System.err.println("SecureOperator::executeSQL duplication part exception:" + e);
+                    return false;
                 }
             }
         }
         
-        return flag;
+        return true;
     }
 
     @Override

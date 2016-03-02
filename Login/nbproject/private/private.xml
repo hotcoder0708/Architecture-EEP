@@ -3,10 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/hujiaxing/Desktop/Architecture/HOMEWORK/A2/A2-2016%20Source/A2-2016%20Source/Login/src/login/InventoryMgr.java</file>
-            <file>file:/Users/hujiaxing/Desktop/Architecture/HOMEWORK/A2/A2-2016%20Source/A2-2016%20Source/Login/src/login/ShippingApp.java</file>
-            <file>file:/Users/hujiaxing/Desktop/Architecture/HOMEWORK/A2/A2-2016%20Source/A2-2016%20Source/Login/src/login/LoginFrame.java</file>
-            <file>file:/Users/hujiaxing/Desktop/Architecture/HOMEWORK/A2/A2-2016%20Source/A2-2016%20Source/Login/src/login/OrderApp.java</file>
+            <file>file:/Users/hujiaxing/Documents/github/Architecture-EEP/Login/src/communication/SecureOperate.java</file>
+            <file>file:/Users/hujiaxing/Documents/github/Architecture-EEP/Login/src/login/secureclient/SecureClient.java</file>
+            <file>file:/Users/hujiaxing/Documents/github/Architecture-EEP/Login/src/login/ShippingApp.java</file>
+            <file>file:/Users/hujiaxing/Documents/github/Architecture-EEP/Login/src/middleware/Utility.java</file>
+            <file>file:/Users/hujiaxing/Documents/github/Architecture-EEP/Login/src/middleware/SecureOperator.java</file>
         </group>
     </open-files>
 </project-private>

@@ -466,7 +466,7 @@ public class ShippingApp extends javax.swing.JFrame {
                 // query to insert the new inventory into the database
                 SQLStatement = "UPDATE orders SET shipped=" + true + " WHERE order_id=" + updateOrderID;
                 result = SecureClient.getInstance().executeSQL(SQLStatement);
-                //System.err.println("result is " + result);
+                result = true;
                 // Now we list the inventory for the selected table
                 jTextArea1.setText("");
                 

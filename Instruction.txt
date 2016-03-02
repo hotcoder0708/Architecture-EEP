@@ -1,0 +1,17 @@
+1. import three .sql files into database. these .sql files are in MySQL folder.
+
+mysql> create database inventory; 
+mysql> create database orderinfo; 
+mysql> create database leaftech;
+
+mysql -u root –p[root pwd] -D inventory < inventory.sql 
+mysql -u root –p[root pwd] -D orderinfo < orderinfo.sql 
+mysql -u root –p[root pwd] -D leaftech < leaftech.sql
+
+2. import Login folder into Netbeans.
+3. Run Login, then the login app appears.
+4.  	for inventory app, username is “hello”, password is “world”.
+	for shipping app, username is “ship”, password is “ship”.
+	for order app, username is “order”, password is “order”.
+5. input username and password, and choose an app, click enter.
+6. different apps will appear. the inventory app merges the old version EEP inventory app and Leaf Tech inventory app. the shipping app can show orders from EEP and Leaf Tech.

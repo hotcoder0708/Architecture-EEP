@@ -100,7 +100,7 @@ public class SecureOperator implements SecureOperate {
     @Override
     public boolean executeSQL(String sql) {
         Connection dbConn;
-        if(sql.toLowerCase().contains("orders")) { // orderinfo database
+        if(sql.toLowerCase().contains("into order") || sql.toLowerCase().contains("table order")) { // orderinfo database
             dbConn = dbConn2;
         } else { // inventory database
             dbConn = dbConn1;

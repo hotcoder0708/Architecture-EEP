@@ -75,14 +75,14 @@ public class SecureOperator implements SecureOperate {
                 ResultSet rs = ps.executeQuery();
                 if(rs.next()) {
                     if(rs.getInt("role") == role_type) {
-                        recordActivity(username, 1, 1);
+                        recordActivity(username, Utility.ACTIVITY_LOGIN, Utility.ACTIVITY_SUCCESS);
                         return 0;
                     } else {
                         return 1;
                     }
                     
                 } else {
-                    recordActivity(username, 1, 0);
+                    recordActivity(username, Utility.ACTIVITY_LOGIN, Utility.ACTIVITY_FAILURE);
                 }
             } catch(Exception e) {
                 System.err.println("SecureOperator::authenticate exception:" + e);
@@ -91,6 +91,13 @@ public class SecureOperator implements SecureOperate {
         return -1;
     }
 
+    /**
+     * Record user activities.
+     * @param username
+     * @param activity_type 0-login, 1-logout
+     * @param success
+     * @return 
+     */
     @Override
     public boolean recordActivity(String username, int activity_type, int success) {
         if(dbConn1 != null) {

@@ -204,15 +204,15 @@ public class LoginFrame extends javax.swing.JFrame {
             close();
             switch (option) {
                 case 1:
-                    ShippingApp app = new ShippingApp();
+                    ShippingApp app = new ShippingApp(username);
                     app.setVisible(true);
                     break;
                 case 2:
-                    OrderApp app1 = new OrderApp();
+                    OrderApp app1 = new OrderApp(username);
                     app1.setVisible(true);
                     break;
                 case 3:
-                    InventoryMgr app2 = new InventoryMgr();
+                    InventoryMgr app2 = new InventoryMgr(username);
                     app2.setVisible(true);
                     break;
                 default:

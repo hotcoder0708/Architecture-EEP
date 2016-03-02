@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.10)
 # Database: inventory
-# Generation Time: 2016-03-01 21:03:30 +0000
+# Generation Time: 2016-03-02 01:41:52 +0000
 # ************************************************************
 
 
@@ -39,20 +39,33 @@ LOCK TABLES `activity` WRITE;
 
 INSERT INTO `activity` (`id`, `username`, `activity_type`, `success`, `activity_time`)
 VALUES
-	(2,'hello',1,1,'2016-03-01 13:38:55'),
-	(3,'hello',1,1,'2016-03-01 13:41:08'),
-	(4,'hello',1,1,'2016-03-01 13:50:43'),
-	(5,'hello',1,1,'2016-03-01 14:00:15'),
-	(6,'hello',1,1,'2016-03-01 14:02:30'),
-	(7,'hello',1,1,'2016-03-01 14:03:28'),
-	(8,'hello',1,1,'2016-03-01 14:11:25'),
-	(9,'hello',1,1,'2016-03-01 14:31:36'),
-	(10,'hello',1,1,'2016-03-01 15:18:51'),
-	(11,'hello',1,1,'2016-03-01 15:29:26'),
-	(12,'hello2',1,0,'2016-03-01 15:38:44'),
-	(13,'hello',1,1,'2016-03-01 15:39:11'),
-	(14,'hello',1,1,'2016-03-01 15:47:49'),
-	(15,'hello',1,1,'2016-03-01 15:49:49');
+	(1,'hello',0,1,'2016-03-01 20:19:57'),
+	(2,'hello',1,1,'2016-03-01 20:20:11'),
+	(3,'hello',0,1,'2016-03-01 20:24:15'),
+	(4,'hello',1,1,'2016-03-01 20:24:20'),
+	(5,'hello',1,1,'2016-03-01 20:24:23'),
+	(6,'hello',1,1,'2016-03-01 20:24:32'),
+	(7,'hello',0,1,'2016-03-01 20:29:00'),
+	(8,'hello',1,1,'2016-03-01 20:29:01'),
+	(9,'hello',1,1,'2016-03-01 20:29:01'),
+	(10,'hello',0,1,'2016-03-01 20:32:01'),
+	(11,'hello',1,1,'2016-03-01 20:32:04'),
+	(12,'hello',1,1,'2016-03-01 20:32:04'),
+	(13,'hello',0,1,'2016-03-01 20:32:54'),
+	(14,'hello',1,1,'2016-03-01 20:32:55'),
+	(15,'hello',0,1,'2016-03-01 20:33:03'),
+	(16,'hello',1,1,'2016-03-01 20:33:06'),
+	(17,'ship',0,1,'2016-03-01 20:33:27'),
+	(18,'order',0,1,'2016-03-01 20:40:03'),
+	(19,'order',1,1,'2016-03-01 20:40:08'),
+	(20,'ship',0,1,'2016-03-01 20:40:13'),
+	(21,'ship',1,1,'2016-03-01 20:40:15'),
+	(22,'hello',0,1,'2016-03-01 20:40:19'),
+	(23,'hello',1,1,'2016-03-01 20:40:21'),
+	(24,'order',0,1,'2016-03-01 20:40:27'),
+	(25,'order',1,1,'2016-03-01 20:40:34'),
+	(26,'ship',0,1,'2016-03-01 20:40:41'),
+	(27,'ship',1,1,'2016-03-01 20:40:43');
 
 /*!40000 ALTER TABLE `activity` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -143,8 +156,7 @@ VALUES
 	('DJ003','Microcentruifuge tubes',75,25.00),
 	('DJ004','Pellet pestles blue polypropylene',50,90.00),
 	('DJ005','Plant tissue emulsifier',40,47.70),
-	('DJ006','Micro centerfuge',4,1754.00),
-	('DJ100','hello2',25,100.00);
+	('DJ006','Micro centerfuge',4,1754.00);
 
 /*!40000 ALTER TABLE `processing` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -300,6 +312,7 @@ CREATE TABLE `user` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(200) NOT NULL DEFAULT '',
   `password` varchar(50) NOT NULL DEFAULT '',
+  `role` smallint(6) DEFAULT '0' COMMENT '0-it, 1-shipping, 2-orders',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -307,9 +320,11 @@ CREATE TABLE `user` (
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 
-INSERT INTO `user` (`id`, `username`, `password`)
+INSERT INTO `user` (`id`, `username`, `password`, `role`)
 VALUES
-	(1,'hello','*70BB17D9634310906050FED37E38259FFAE578B8');
+	(1,'hello','*70BB17D9634310906050FED37E38259FFAE578B8',0),
+	(2,'ship','*F3ECAE419F1F58278C0F773C7176CC6567251302',1),
+	(3,'order','*5BDCA059C4CF230E688CD234FA60B5DCD8C84622',2);
 
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;

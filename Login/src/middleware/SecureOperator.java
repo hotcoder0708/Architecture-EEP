@@ -17,8 +17,11 @@ import java.sql.ResultSet;
  */
 public class SecureOperator implements SecureOperate {
     
+    public static boolean big_switch = false; // Flag of the big switch
+    
     Connection dbConn1 = null;           // MySQL connection handle for inventory
     Connection dbConn2 = null;           // MySQL connection handle for orderinfo
+    Connection dbConn3 = null;           // MySQL connection handle for leaftech
     
     public SecureOperator() {
         super();
@@ -31,12 +34,12 @@ public class SecureOperator implements SecureOperate {
         String SQLServerIP = "localhost";
         String sourceURL1 = "jdbc:mysql://" + SQLServerIP + ":3306/inventory";
         String sourceURL2 = "jdbc:mysql://" + SQLServerIP + ":3306/orderinfo";
+        String sourceURL3 = "jdbc:mysql://" + SQLServerIP + ":3306/leaftech";
         try {
             //create a connection to the db
             dbConn1 = DriverManager.getConnection(sourceURL1,"remote","remote_pass");
         } catch (Exception e) {
             System.err.println("initDB:dbConn1 exception:" + e);
-            e.printStackTrace();
         }
         
         try {
@@ -44,6 +47,13 @@ public class SecureOperator implements SecureOperate {
             dbConn2 = DriverManager.getConnection(sourceURL2,"remote","remote_pass");
         } catch (Exception e) {
             System.err.println("initDB:dbConn2 exception:" + e);
+        }
+        
+        try {
+            //create a connection to the db
+            dbConn3 = DriverManager.getConnection(sourceURL3,"remote","remote_pass");
+        } catch (Exception e) {
+            System.err.println("initDB:dbConn3 exception:" + e);
         }
     }
 
@@ -78,32 +88,49 @@ public class SecureOperator implements SecureOperate {
                 ps.setString(1, username);
                 ps.setInt(2, activity_type);
                 ps.setInt(3, success);
-                return ps.execute();
+                ps.execute();
             } catch(Exception e) {
-                System.err.println("SecureOperator::authenticate exception:" + e);
+                System.err.println("SecureOperator::recordActivity exception:" + e);
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean executeSQL(String sql) {
         Connection dbConn;
-        if(sql.toLowerCase().contains("orders")) { // orderinfo database
+        if(sql.toLowerCase().contains("into order") || sql.toLowerCase().contains("table order")) { // orderinfo database
             dbConn = dbConn2;
         } else { // inventory database
             dbConn = dbConn1;
         }
-        
+                
         if(dbConn != null) {
             try {
                 PreparedStatement ps = dbConn.prepareStatement(sql);
-                return ps.execute();
+                ps.execute();
             } catch(Exception e) {
-                System.err.println("SecureOperator::authenticate exception:" + e);
+                System.err.println("SecureOperator::executeSQL exception:" + e);
+                return false;
             }
         }
-        return false;
+        
+        if(!big_switch && dbConn == dbConn1 && !Utility.fromEEP(sql)) {
+            // Before big_switch, we need to update both old leaftech database and the new duplicate
+            // database
+            if(dbConn3 != null) {
+                try {
+                    PreparedStatement ps = dbConn3.prepareStatement(sql);
+                    ps.execute();
+                } catch(Exception e) {
+                    System.err.println("SecureOperator::executeSQL duplication part exception:" + e);
+                    return false;
+                }
+            }
+        }
+        
+        return true;
     }
 
     @Override
@@ -121,7 +148,7 @@ public class SecureOperator implements SecureOperate {
                 ResultSet rs = ps.executeQuery();
                 return rs;
             } catch(Exception e) {
-                System.err.println("SecureOperator::authenticate exception:" + e);
+                System.err.println("SecureOperator::querySQL exception:" + e);
             }
         }
         return null;

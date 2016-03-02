@@ -57,8 +57,15 @@ public class SecureOperator implements SecureOperate {
         }
     }
 
+    /**
+     * Authenticate a user.
+     * @param username
+     * @param password
+     * @param role_type
+     * @return -1 - login failure, 0 - success, 1 - this department APP is not authorized to you
+     */
     @Override
-    public boolean authenticate(String username, String password) {
+    public int authenticate(String username, String password, int role_type) {
         if(dbConn1 != null) {
             try {
                 String query = "SELECT * FROM user WHERE username = ? AND password = PASSWORD(?)";
@@ -67,8 +74,13 @@ public class SecureOperator implements SecureOperate {
                 ps.setString(2, password);
                 ResultSet rs = ps.executeQuery();
                 if(rs.next()) {
-                    recordActivity(username, 1, 1);
-                    return true;
+                    if(rs.getInt("role") == role_type) {
+                        recordActivity(username, 1, 1);
+                        return 0;
+                    } else {
+                        return 1;
+                    }
+                    
                 } else {
                     recordActivity(username, 1, 0);
                 }
@@ -76,7 +88,7 @@ public class SecureOperator implements SecureOperate {
                 System.err.println("SecureOperator::authenticate exception:" + e);
             }
         }
-        return false;
+        return -1;
     }
 
     @Override

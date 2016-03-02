@@ -12,7 +12,7 @@ import java.sql.ResultSet;
  * @author netdong
  */
 public interface SecureOperate {
-    boolean authenticate(String username, String password);
+    int authenticate(String username, String password, int role_type);
     boolean recordActivity(String username, int activity_type, int success);
     boolean executeSQL(String sql);
     ResultSet querySQL(String sql);

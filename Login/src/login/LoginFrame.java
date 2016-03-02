@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import login.secureclient.SecureClient;
+import middleware.Utility;
 
 /**
  *
@@ -50,6 +51,7 @@ public class LoginFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jLabel1.setText("Login");
 
         jLabel2.setText("username");
@@ -170,7 +172,7 @@ public class LoginFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         pack();
@@ -180,18 +182,25 @@ public class LoginFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_usernameTextFieldActionPerformed
 
-    private boolean authenciate(String username, String password) {
-        return SecureClient.getInstance().authenticate(username, password);
+    private int authenciate(String username, String password, int role_type) {
+        return SecureClient.getInstance().authenticate(username, password, role_type);
     }
     private void enterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterButtonActionPerformed
         // TODO add your handling code here:
         String password = passwordTextField.getText();
         String username = usernameTextField.getText();
+        checkRadio();
+        int role_type = 0;
+        if(option == 2) {
+            role_type = 2;
+        } else if(option == 1) {
+            role_type = 1;
+        }
         
-        if (authenciate(username, password)) {
+        int status = authenciate(username, password, role_type);
+        if (status == Utility.LOGIN_SUCCESS) {
             passwordTextField.setText("");
             usernameTextField.setText("");
-            checkRadio();
             close();
             switch (option) {
                 case 1:
@@ -207,15 +216,18 @@ public class LoginFrame extends javax.swing.JFrame {
                     app2.setVisible(true);
                     break;
                 default:
-                    JOptionPane.showMessageDialog(null, "choose an app", "wrong pass", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "You have to choose an app to login!", "Access Denied", JOptionPane.ERROR_MESSAGE);
                     passwordTextField.setText("");
                     usernameTextField.setText("");
                     break;
             }
-            //Welcome w = new Welcome();
-            //w.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(null, "access denied", "wrong pass", JOptionPane.ERROR_MESSAGE);
+        } else if(status == Utility.LOGIN_UNAUTHORIZED) {
+            JOptionPane.showMessageDialog(null, "You're not authorized to login this app!", "Access Denied", JOptionPane.ERROR_MESSAGE);
+            passwordTextField.setText("");
+            usernameTextField.setText("");
+        } 
+        else {
+            JOptionPane.showMessageDialog(null, "Wrong username/password!", "Access Denied", JOptionPane.ERROR_MESSAGE);
             passwordTextField.setText("");
             usernameTextField.setText("");
         }

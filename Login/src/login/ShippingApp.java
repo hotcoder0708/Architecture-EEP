@@ -1,8 +1,11 @@
 package login;
 
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.*;
 import login.secureclient.SecureClient;
+import middleware.Utility;
 
  /******************************************************************************
  * File:NewJFrame.java
@@ -22,13 +25,22 @@ import login.secureclient.SecureClient;
  * @author lattanze
  */
 public class ShippingApp extends javax.swing.JFrame {
+    String username = null;
     Integer updateOrderID;
     String versionID = "v2.10.10";
     
     /** Creates new form NewJFrame */
-    public ShippingApp() {
+    public ShippingApp(String username) {
         initComponents();
         jLabel1.setText("Shipping Application " + versionID);
+        
+        this.username = username;
+        jButton5.setText(username+", Logout");
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+              logout(false);
+            }
+         });
     }
 
     /** This method is called from within the constructor to
@@ -68,6 +80,7 @@ public class ShippingApp extends javax.swing.JFrame {
         jTextArea4 = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
         jTextField5 = new javax.swing.JTextField();
+        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -174,6 +187,13 @@ public class ShippingApp extends javax.swing.JFrame {
             }
         });
 
+        jButton5.setText("jButton5");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -205,9 +225,14 @@ public class ShippingApp extends javax.swing.JFrame {
                                     .addComponent(jButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(187, 187, 187)
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -246,7 +271,9 @@ public class ShippingApp extends javax.swing.JFrame {
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2))
                 .addGap(8, 8, 8)
-                .addComponent(jButton4)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton4)
+                    .addComponent(jButton5))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -466,7 +493,7 @@ public class ShippingApp extends javax.swing.JFrame {
                 // query to insert the new inventory into the database
                 SQLStatement = "UPDATE orders SET shipped=" + true + " WHERE order_id=" + updateOrderID;
                 result = SecureClient.getInstance().executeSQL(SQLStatement);
-                result = true;
+                //System.err.println("result is " + result);
                 // Now we list the inventory for the selected table
                 jTextArea1.setText("");
                 
@@ -518,6 +545,23 @@ public class ShippingApp extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField5ActionPerformed
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        logout(true);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void logout(boolean closeFrame) {
+        try {
+            SecureClient.getInstance().recordActivity(username, Utility.ACTIVITY_LOGOUT, Utility.ACTIVITY_SUCCESS);
+            if(closeFrame) {
+                setVisible(false); //you can't see me!
+                dispose(); //Destroy the JFrame object
+            }
+            new LoginFrame().setVisible(true);
+        } catch (Exception ex) {
+            System.err.println("Logout exception:" + ex);
+        }
+    }
     private void getPendingOrders() {
 
         // This method is responsible for querying the orders database and
@@ -653,7 +697,7 @@ public class ShippingApp extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ShippingApp().setVisible(true);
+                new ShippingApp("").setVisible(true);
             }
         });
     }
@@ -663,6 +707,7 @@ public class ShippingApp extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

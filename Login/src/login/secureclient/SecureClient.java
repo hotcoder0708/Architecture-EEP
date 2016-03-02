@@ -38,10 +38,11 @@ public class SecureClient {
      * Authenticate a user through middle-ware.
      * @param username
      * @param password
-     * @return true if authenticated successfully, otherwise false
+     * @param role_type
+     * @return -1 - login failure, 0 - success, 1 - this department APP is not authorized to you
      */
-    public boolean authenticate(String username, String password) {
-        return so.authenticate(username, password);
+    public int authenticate(String username, String password, int role_type) {
+        return so.authenticate(username, password, role_type);
     }
     
     /**

@@ -57,8 +57,15 @@ public class SecureOperator implements SecureOperate {
         }
     }
 
+    /**
+     * Authenticate a user.
+     * @param username
+     * @param password
+     * @param role_type
+     * @return -1 - login failure, 0 - success, 1 - this department APP is not authorized to you
+     */
     @Override
-    public boolean authenticate(String username, String password) {
+    public int authenticate(String username, String password, int role_type) {
         if(dbConn1 != null) {
             try {
                 String query = "SELECT * FROM user WHERE username = ? AND password = PASSWORD(?)";
@@ -67,18 +74,30 @@ public class SecureOperator implements SecureOperate {
                 ps.setString(2, password);
                 ResultSet rs = ps.executeQuery();
                 if(rs.next()) {
-                    recordActivity(username, 1, 1);
-                    return true;
+                    if(rs.getInt("role") == role_type) {
+                        recordActivity(username, Utility.ACTIVITY_LOGIN, Utility.ACTIVITY_SUCCESS);
+                        return 0;
+                    } else {
+                        return 1;
+                    }
+                    
                 } else {
-                    recordActivity(username, 1, 0);
+                    recordActivity(username, Utility.ACTIVITY_LOGIN, Utility.ACTIVITY_FAILURE);
                 }
             } catch(Exception e) {
                 System.err.println("SecureOperator::authenticate exception:" + e);
             }
         }
-        return false;
+        return -1;
     }
 
+    /**
+     * Record user activities.
+     * @param username
+     * @param activity_type 0-login, 1-logout
+     * @param success
+     * @return 
+     */
     @Override
     public boolean recordActivity(String username, int activity_type, int success) {
         if(dbConn1 != null) {
@@ -88,31 +107,31 @@ public class SecureOperator implements SecureOperate {
                 ps.setString(1, username);
                 ps.setInt(2, activity_type);
                 ps.setInt(3, success);
-                return ps.execute();
+                ps.execute();
             } catch(Exception e) {
                 System.err.println("SecureOperator::recordActivity exception:" + e);
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean executeSQL(String sql) {
         Connection dbConn;
-        if(sql.toLowerCase().contains("orders")) { // orderinfo database
+        if(sql.toLowerCase().contains("update order") || sql.toLowerCase().contains("into order") || sql.toLowerCase().contains("table order")) { // orderinfo database
             dbConn = dbConn2;
         } else { // inventory database
             dbConn = dbConn1;
         }
-        
-        boolean flag = false;
-        
+                
         if(dbConn != null) {
             try {
                 PreparedStatement ps = dbConn.prepareStatement(sql);
-                flag = ps.execute();
+                ps.execute();
             } catch(Exception e) {
                 System.err.println("SecureOperator::executeSQL exception:" + e);
+                return false;
             }
         }
         
@@ -122,14 +141,15 @@ public class SecureOperator implements SecureOperate {
             if(dbConn3 != null) {
                 try {
                     PreparedStatement ps = dbConn3.prepareStatement(sql);
-                    flag = ps.execute();
+                    ps.execute();
                 } catch(Exception e) {
                     System.err.println("SecureOperator::executeSQL duplication part exception:" + e);
+                    return false;
                 }
             }
         }
         
-        return flag;
+        return true;
     }
 
     @Override

@@ -10,6 +10,16 @@ package middleware;
  * @author netdong
  */
 public class Utility {
+    public static int ACTIVITY_LOGIN = 0;
+    public static int ACTIVITY_LOGOUT = 1;
+    
+    public static int ACTIVITY_SUCCESS = 1;
+    public static int ACTIVITY_FAILURE = 0;
+    
+    public static int LOGIN_SUCCESS = 0;
+    public static int LOGIN_FAILURE = -1;
+    public static int LOGIN_UNAUTHORIZED = 1;
+    
     public static String[] INVENTORY_TABLES = {
         "trees", "shrubs", "seeds", "cultureboxes", "genomics", "processing", "referencematerials"
     };

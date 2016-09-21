@@ -1,3 +1,5 @@
 # README #
 
-Architecture A2 assignment for Donghui Li, Jiaxing Hu, Shan He and Sweta.
+Architecture A2 assignment.
+
+Design the architecture of an ecommerce system, which has a good scalability.
